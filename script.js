@@ -15292,6 +15292,7 @@ const dictionary = [
 
 const WORD_LENTH = 5
 const FLIP_ANIMATION_DURATION = 500
+const DANCE_ANIMATION_DURATION = 500
 const keyboard = document.querySelector("[data-keyboard]")
 const alertContainer = document.querySelector("[data-alert-container]")
 const guessGrid = document.querySelector("[data-guess-grid]")
@@ -15440,5 +15441,31 @@ function shakeTiles(tiles) {
     tile.addEventListener("animationend", () => {
       tile.classList.remove("shake")
     }, { once: true })
+  })
+}
+
+function checkWinLose(guess, tiles) {
+  if (guess === targetWord) {
+    showAlert("You win", 5000)
+    danceTiles(tiles)
+    stopInteraction()
+    return
+  }
+
+  const remainingTiles = guessGrid.querySelectorAll(":not([data-letter])")
+  if (remainingTiles.length === 0) {
+    showAlert(targetWord.toUpperCase(), null)
+    stopInteraction()
+  }
+}
+
+function danceTiles(tiles) {
+  tiles.forEach((tile, index) => {
+    setTimeout(() => {
+      tile.classList.add("dance")
+      tile.addEventListener("animationend", () => {
+        tile.classList.remove("dance")
+      }, { once: true })
+    }, index * DANCE_ANIMATION_DURATION / 5);
   })
 }
