@@ -15290,6 +15290,9 @@ const dictionary = [
   "shave"
 ]
 
+const WORD_LENTH = 5
+const guessGrid = document.querySelector("[data-guess-grid]")
+
 startInteraction()
 
 function startInteraction() {
@@ -15331,8 +15334,30 @@ function handleKeyPress(e) {
     return
   }
 
-  if (e.key.matches(/[a-z]$/)) {
-    pressKey()
+  if (e.key.match(/^[a-z]$/)) {
+    pressKey(e.key)
     return
   }
+}
+
+function pressKey(key) {
+  const activeTiles = getActiveTiles()
+  if (activeTiles.length >= WORD_LENTH) return
+  const nextTile = guessGrid.querySelector(":not([data-letter])")
+  nextTile.dataset.letter = key.toLowerCase()
+  nextTile.textContent = key
+  nextTile.dataset.state = "active"
+}
+
+function deleteKey() {
+  const activeTiles = getActiveTiles()
+  const lastTile = activeTiles[activeTiles.length - 1]
+  if (lastTile == null) return
+  lastTile.textContent = ""
+  delete lastTile.dataset.state
+  delete lastTile.dataset.letter
+}
+
+function getActiveTiles() {
+  return guessGrid.querySelectorAll('[data-state="active"]')
 }
